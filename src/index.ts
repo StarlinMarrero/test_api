@@ -1,7 +1,20 @@
-import { config } from "./config";
-import app from './app'
+import { createServer } from "http";
+import app from "./app";
+import config from "./config";
+import { createConnection } from "./db/connection";
+import socket from "./socket";
 
 
-app.listen(config.app.port, () => {
-    console.log("🚀 Server running on port: ", config.app.port);
+
+
+createConnection().then(() => {
+    console.log("💾 Database connected");
+
+    const server = createServer(app);
+
+    socket(server);
+
+    server.listen(config.port, () => {
+        console.log(`🚀 Server ON: http://localhost:${config.port}`);
+    });
 });
